@@ -1,0 +1,47 @@
+# Dependências
+node_modules/
+
+# Cache do Expo
+.expo/
+.expo-shared/
+
+# Cache do Metro bundler
+.expo/web-build/
+dist/
+web-build/
+
+# Build Android
+android/
+*.apk
+*.keystore
+
+# Build iOS
+ios/
+*.xcworkspace
+*.xcuserdata
+*.xcuserstate
+*.xcuserdatad
+*.pbxuser
+*.mode1v3
+*.mode2v3
+
+# Arquivos de log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+expo-debug.log
+
+# Ambiente e chaves
+.env
+.env.*
+*.key
+*.pem
+
+# Configurações do editor
+.vscode/
+.idea/
+*.swp
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
