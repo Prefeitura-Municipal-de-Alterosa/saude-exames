@@ -22,8 +22,8 @@ app.use(router);
 // Configuração do Nodemailer
 const transporter = nodemailer.createTransport({
   service: "gmail",
-  auth: {
-    user: "gabrielruascurriculo@gmail.com",
+  auth: { 
+    user: "gabrielruascurriculo@gmail.com", 
     pass: "ybek xgsa lkmg nsru" // senha de app
   },
 });
@@ -53,7 +53,6 @@ async function sendTestEmail(link) {
     fs.writeFileSync(filePath, jsonContent);
 
     console.log("💾 link.json atualizado em:", filePath);
-
   } catch (error) {
     console.error("❌ Erro ao enviar e-mail:");
     console.error(error);
