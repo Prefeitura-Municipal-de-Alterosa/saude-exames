@@ -1,11 +1,60 @@
+// import express from "express";
+// import cors from "cors";
+// import nodemailer from "nodemailer";
+// import router from "./routes.js";
+// import setupSwagger from "./swagger.js";
+
+// const app = express();
+// const PORT = 3001;
+
+// app.use(express.json());
+// app.use(cors());
+
+// // Swagger (disponível em /api-docs)
+// setupSwagger(app);
+
+// // Suas rotas da aplicação
+// app.use(router);
+
+// // Configuração do Nodemailer
+// const transporter = nodemailer.createTransport({
+//     service: "gmail",
+//     auth: { 
+//         user: "gabrielruascurriculo@gmail.com", 
+//         pass: "ybek xgsa lkmg nsru" // senha de app
+//     },
+// });
+
+// // Função para enviar email
+// async function sendTestEmail() {
+//     try {
+//         const info = await transporter.sendMail({
+//             from: "gabrielruascurriculo@gmail.com",
+//             to: "gabrielruas30@gmail.com",
+//             subject: "🚀 Teste de envio",
+//             text: "O servidor subiu com sucesso e este é um e-mail de teste!",
+//         });
+
+//         console.log("✅ E-mail enviado:", info.response);
+//     } catch (error) {
+//         console.error("❌ Erro ao enviar e-mail:", error);
+//     }
+// }
+
+// // Inicia o servidor
+// app.listen(PORT, () => {
+//     console.log(`✅ Servidor rodando na porta: ${PORT}`);
+//     console.log(`📚 Documentação Swagger disponível em: http://localhost:${PORT}/api-docs`);
+
+//     // Envia e-mail de teste
+//     sendTestEmail();
+// });
 import express from "express";
 import cors from "cors";
 import { exec } from "child_process";
 import nodemailer from "nodemailer";
 import router from "./routes.js";
 import setupSwagger from "./swagger.js";
-import fs from "fs";       // ⬅️ Import necessário
-import path from "path";   // ⬅️ Import necessário
 
 const app = express();
 const PORT = 3001;
@@ -22,8 +71,8 @@ app.use(router);
 // Configuração do Nodemailer
 const transporter = nodemailer.createTransport({
   service: "gmail",
-  auth: {
-    user: "gabrielruascurriculo@gmail.com",
+  auth: { 
+    user: "gabrielruascurriculo@gmail.com", 
     pass: "ybek xgsa lkmg nsru" // senha de app
   },
 });
@@ -42,18 +91,6 @@ async function sendTestEmail(link) {
 
     console.log("✅ E-mail enviado com sucesso!");
     console.log("📧 Resposta do servidor de e-mail:", info.response);
-
-    // Caminho do link.json no outro projeto (foodie-mobile)
-    const filePath = path.resolve("..", "foodie-mobile", "src", "constants", "link.json");
-
-    // Cria o conteúdo JSON com a URL
-    const jsonContent = JSON.stringify({ url: link }, null, 2);
-
-    // Salva o link no arquivo JSON (sobrescrevendo o anterior)
-    fs.writeFileSync(filePath, jsonContent);
-
-    console.log("💾 link.json atualizado em:", filePath);
-
   } catch (error) {
     console.error("❌ Erro ao enviar e-mail:");
     console.error(error);
