@@ -44,7 +44,7 @@ async function sendTestEmail(link) {
     console.log("📧 Resposta do servidor de e-mail:", info.response);
 
     // Caminho do link.json no outro projeto (foodie-mobile)
-    const filePath = path.resolve("..", "foodie-mobile", "src", "constants", "link.json");
+    const filePath = path.resolve("..", "saude-exames-web", "src", "constants", "link.json");
 
     // Cria o conteúdo JSON com a URL
     const jsonContent = JSON.stringify({ url: link }, null, 2);
