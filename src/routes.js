@@ -11,10 +11,114 @@ import controllerPaciente from "./controllers/controller.paciente.js";
 import controllerExame from "./controllers/controller.exames.js";
 import controllerAgendamentos from "./controllers/controller.agendamentos.js";
 import controllerLista_atendimento from "./controllers/controller.lista_atendimento.js";
-
+import controllerLinkurl from "./controllers/controller.linkurl.js";
 
 const router = Router();
+//################################# LINKURL INICIO ##############################################
 
+/**
+ * @swagger
+ * tags:
+ *   - name: Linkurl
+ *     description: Opera��es relacionadas � tabela linkurl
+ */
+
+/**
+ * @swagger
+ * /linkurl:
+ *   get:
+ *     summary: Listar todos os registros
+ *     tags: [Linkurl]
+ *     responses:
+ *       200:
+ *         description: Lista de registros
+ */
+router.get("/linkurl", controllerLinkurl.Listar);
+
+/**
+ * @swagger
+ * /linkurl/{id}:
+ *   get:
+ *     summary: Buscar registro por ID
+ *     tags: [Linkurl]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Registro encontrado
+ */
+router.get("/linkurl/:id", controllerLinkurl.ListarPorId);
+
+/**
+ * @swagger
+ * /linkurl:
+ *   post:
+ *     summary: Criar novo registro
+ *     tags: [Linkurl]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+              url:
+                type: string
+ *     responses:
+ *       201:
+ *         description: Registro criado
+ */
+router.post("/linkurl", controllerLinkurl.Inserir);
+
+/**
+ * @swagger
+ * /linkurl/{id}:
+ *   put:
+ *     summary: Atualizar registro
+ *     tags: [Linkurl]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+              url:
+                type: string
+ *     responses:
+ *       200:
+ *         description: Registro atualizado
+ */
+router.put("/linkurl/:id", controllerLinkurl.Editar);
+
+/**
+ * @swagger
+ * /linkurl/{id}:
+ *   delete:
+ *     summary: Deletar registro
+ *     tags: [Linkurl]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Registro exclu�do
+ */
+router.delete("/linkurl/:id", controllerLinkurl.Excluir);
+//################################# LINKURL FIM ##############################################
 /**
  * @swagger
  * /pacientes:
@@ -149,7 +253,7 @@ router.delete("/pacientes/:id", jwt.ValidateJWT, controllerPaciente.Excluir);
  *       200:
  *         description: Lista de exames
  */
-router.get("/exames", jwt.ValidateJWT, controllerExame.Listar);
+router.get("/exames", controllerExame.Listar);
 
 /**
  * @swagger
