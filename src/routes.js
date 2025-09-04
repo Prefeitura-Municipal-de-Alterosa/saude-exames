@@ -15,12 +15,11 @@ import controllerLinkurl from "./controllers/controller.linkurl.js";
 
 const router = Router();
 //################################# LINKURL INICIO ##############################################
-
 /**
  * @swagger
  * tags:
  *   - name: Linkurl
- *     description: Opera��es relacionadas � tabela linkurl
+ *     description: Operações relacionadas à tabela linkurl
  */
 
 /**
@@ -66,8 +65,8 @@ router.get("/linkurl/:id", controllerLinkurl.ListarPorId);
  *           schema:
  *             type: object
  *             properties:
-              url:
-                type: string
+ *               url:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Registro criado
@@ -93,8 +92,8 @@ router.post("/linkurl", controllerLinkurl.Inserir);
  *           schema:
  *             type: object
  *             properties:
-              url:
-                type: string
+ *               url:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Registro atualizado
@@ -115,9 +114,10 @@ router.put("/linkurl/:id", controllerLinkurl.Editar);
  *           type: integer
  *     responses:
  *       204:
- *         description: Registro exclu�do
+ *         description: Registro excluído
  */
 router.delete("/linkurl/:id", controllerLinkurl.Excluir);
+
 //################################# LINKURL FIM ##############################################
 /**
  * @swagger
