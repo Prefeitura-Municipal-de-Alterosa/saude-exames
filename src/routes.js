@@ -1,5 +1,8 @@
 import { Router } from "express";
 import jwt from "./token.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
 // Controllers
 import controllerCategoria from "./controllers/controller.categoria.js";
@@ -12,8 +15,145 @@ import controllerExame from "./controllers/controller.exames.js";
 import controllerAgendamentos from "./controllers/controller.agendamentos.js";
 import controllerLista_atendimento from "./controllers/controller.lista_atendimento.js";
 import controllerLinkurl from "./controllers/controller.linkurl.js";
+import controllerArexames from "./controllers/controller.arexames.js";
 
+//################################# FUNÇAO AREXAMES INICIO ##############################################
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadPath = path.join("uploads", "arexames");
+
+        // Cria a pasta se não existir
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+
+        cb(null, uploadPath); // define a pasta de destino
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        const nomeArquivo = `${Date.now()}-${Math.round(Math.random() * 1E9)}${ext}`;
+        cb(null, nomeArquivo);
+    }
+});
+
+const upload = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        if (!file.mimetype.includes("pdf")) {
+            return cb(new Error("Apenas arquivos PDF são permitidos!"));
+        }
+        cb(null, true);
+    }
+});
+//################################# FUNCAO AREXAMES FIM #################################################
 const router = Router();
+
+//################################# AREXAMES INICIO ##############################################
+
+/**
+ * @swagger
+ * /arexames:
+ *   get:
+ *     summary: Lista todos os exames
+ *     tags: [Arexames]
+ *     responses:
+ *       200:
+ *         description: Lista de exames
+ */
+router.get("/arexames", controllerArexames.Listar);
+
+/**
+ * @swagger
+ * /arexames/{id}:
+ *   get:
+ *     summary: Busca exame por ID
+ *     tags: [Arexames]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Exame encontrado
+ *       404:
+ *         description: Não encontrado
+ */
+router.get("/arexames/:id", controllerArexames.ListarPorId);
+
+/**
+ * @swagger
+ * /arexames/{id}:
+ *   delete:
+ *     summary: Exclui exame por ID
+ *     tags: [Arexames]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Exame excluído
+ *       404:
+ *         description: Não encontrado
+ */
+router.delete("/arexames/:id", controllerArexames.Excluir);
+
+/**
+ * @swagger
+ * /arexames:
+ *   post:
+ *     summary: Upload de exame em PDF com dados do paciente
+ *     tags: [Arexames]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *                 description: Nome do paciente
+ *                 example: "João da Silva"
+ *               arquivo:
+ *                 type: string
+ *                 format: binary
+ *                 description: Arquivo PDF do exame
+ *     responses:
+ *       201:
+ *         description: Exame cadastrado com sucesso
+ *       400:
+ *         description: Erro ao enviar o arquivo
+ */
+router.post("/arexames", upload.single("arquivo"), controllerArexames.Inserir);
+
+
+/**
+ * @swagger
+ * /arexames/arquivo/{nome}:
+ *   get:
+ *     summary: Download do arquivo PDF
+ *     tags: [Arexames]
+ *     parameters:
+ *       - in: path
+ *         name: nome
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Arquivo retornado
+ *       404:
+ *         description: Arquivo não encontrado
+ */
+router.get("/arexames/arquivo/:nome", controllerArexames.Download);
+
+//################################# AREXAMES FIM #################################################
+
 //################################# LINKURL INICIO ##############################################
 /**
  * @swagger
@@ -450,7 +590,7 @@ router.post("/usuarios/login", controllerUsuario.Login);
  *       201:
  *         description: Usuário criado com sucesso
  */
-router.post("/usuarios",jwt.ValidateJWT, controllerUsuario.Inserir);
+router.post("/usuarios", jwt.ValidateJWT, controllerUsuario.Inserir);
 
 /**
  * @swagger

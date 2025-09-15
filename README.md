@@ -80,6 +80,8 @@ Copy
 Edit
 
 ---
+executar o projeto 
+node --watch '.\src\index.js'    
 
 👉 Quer que eu já ajuste o seu `package.json` para incluir esse script `dev` e te mostrar como fica?
 
