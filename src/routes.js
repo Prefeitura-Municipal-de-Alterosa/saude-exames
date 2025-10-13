@@ -64,23 +64,52 @@ router.get("/arexames", controllerArexames.Listar);
 
 /**
  * @swagger
- * /arexames/{id}:
+ * /arexamesPesquisar:
  *   get:
- *     summary: Busca exame por ID
+ *     summary: Pesquisar exames por nome, exame e finalizado
  *     tags: [Arexames]
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
+ *       - in: query
+ *         name: nome
+ *         required: false
  *         schema:
- *           type: integer
+ *           type: string
+ *         description: Nome do paciente
+ *       - in: query
+ *         name: exame
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Nome ou código do exame
+ *       - in: query
+ *         name: finalizado
+ *         schema:
+ *           type: string
+ *         description: Indica se o exame está finalizado
  *     responses:
  *       200:
- *         description: Exame encontrado
+ *         description: Lista de exames encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   nome:
+ *                     type: string
+ *                   exame:
+ *                     type: string
+ *                   finalizado:
+ *                     type: boolean
+ *                   arquivo:
+ *                     type: string
+ *                     description: Nome do arquivo PDF
  *       404:
- *         description: Não encontrado
+ *         description: Nenhum exame encontrado
  */
-router.get("/arexames/:id", controllerArexames.ListarPorId);
+router.get("/arexamesPesquisar", controllerArexames.Pesquisar);
+
 
 /**
  * @swagger
@@ -119,6 +148,14 @@ router.delete("/arexames/:id", controllerArexames.Excluir);
  *                 type: string
  *                 description: Nome do paciente
  *                 example: "João da Silva"
+ *               exame:
+ *                 type: string
+ *                 description: Código ou nome do exame
+ *                 example: "Hemograma"
+ *               finalizado:
+ *                 type: string
+ *                 description: Código ou entre com uma data
+ *                 example: "10/01/2022"
  *               arquivo:
  *                 type: string
  *                 format: binary
@@ -130,6 +167,7 @@ router.delete("/arexames/:id", controllerArexames.Excluir);
  *         description: Erro ao enviar o arquivo
  */
 router.post("/arexames", upload.single("arquivo"), controllerArexames.Inserir);
+
 
 
 /**
@@ -144,13 +182,21 @@ router.post("/arexames", upload.single("arquivo"), controllerArexames.Inserir);
  *         required: true
  *         schema:
  *           type: string
+ *         description: Nome do arquivo PDF
  *     responses:
  *       200:
  *         description: Arquivo retornado
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
  *       404:
  *         description: Arquivo não encontrado
  */
+
 router.get("/arexames/arquivo/:nome", controllerArexames.Download);
+
 
 //################################# AREXAMES FIM #################################################
 

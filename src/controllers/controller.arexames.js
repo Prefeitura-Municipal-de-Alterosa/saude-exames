@@ -10,24 +10,37 @@ async function Listar(req, res) {
     }
 }
 
-async function ListarPorId(req, res) {
+async function Pesquisar(req, res) {
     try {
-        const id = parseInt(req.params.id);
-        const registro = await serviceArexames.ListarPorId(id);
-        if (registro) {
-            res.status(200).json(registro);
+        const { nome, exame, finalizado } = req.query;
+
+        // Verifica se pelo menos um parâmetro foi informado
+        if (!nome && !exame && finalizado === undefined) {
+            return res.status(400).json({ error: "Informe pelo menos um parâmetro: nome, exame ou finalizado." });
+        }
+
+        // Monta objeto de pesquisa
+        const dados = { nome, exame, finalizado };
+
+        // Chama o service com os filtros
+        const registros = await serviceArexames.Pesquisar(dados);
+
+        if (registros && registros.length > 0) {
+            res.status(200).json(registros);
         } else {
-            res.status(404).json({ error: "N�o encontrado" });
+            res.status(404).json({ error: "Nenhum exame encontrado." });
         }
     } catch (error) {
+        console.error("Erro em controllerArexames.Pesquisar:", error);
         res.status(500).json({ error: error.message });
     }
 }
 
+
 async function Inserir(req, res) {
     try {
-        const { id_pacientecpf, nome } = req.body; // campos do form-data
-        const arquivo = req.file; // arquivo enviado
+        const { id_pacientecpf, nome, exame, finalizado } = req.body; // campos do form-data
+        const arquivo = req.file; // arquivo enviado pelo multer
 
         if (!arquivo) {
             return res.status(400).json({ error: "É necessário enviar um arquivo." });
@@ -35,27 +48,32 @@ async function Inserir(req, res) {
 
         // Monta objeto para enviar ao service
         const dados = {
+            id_pacientecpf,
             nome,
-            arquivo // ou arquivo.filename se quiser só o nome do arquivo
+            exame,
+            finalizado,
+            arquivo // se quiser salvar só o nome: arquivo.filename
         };
 
         // Log opcional para debug
-        // console.log("📥 Dados recebidos do body:", { id_pacientecpf, nome });
-        // console.log("📄 Arquivo recebido:", {
-        //     nomeOriginal: arquivo.originalname,
-        //     nomeSalvo: arquivo.filename,
-        //     tipo: arquivo.mimetype,
-        //     tamanho: arquivo.size
-        // });
+        console.log("📥 Dados recebidos:", { id_pacientecpf, nome, exame, finalizado });
+        console.log("📄 Arquivo recebido:", {
+            nomeOriginal: arquivo.originalname,
+            nomeSalvo: arquivo.filename,
+            tipo: arquivo.mimetype,
+            tamanho: arquivo.size
+        });
 
         // Chama service para inserir no banco
         const novo = await serviceArexames.Inserir(dados);
         res.status(201).json(novo);
 
     } catch (error) {
+        console.error("❌ Erro no Inserir:", error);
         res.status(500).json({ error: error.message });
     }
 }
+
 
 async function Excluir(req, res) {
     try {
@@ -81,4 +99,4 @@ async function Download(req, res) {
     }
 }
 
-export default { Listar, ListarPorId, Inserir, Excluir, Download };
+export default { Listar, Pesquisar, Inserir, Excluir, Download };

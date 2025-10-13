@@ -4,8 +4,8 @@ async function Listar() {
     return await repositoryArexames.Listar();
 }
 
-async function ListarPorId(id) {
-    return await repositoryArexames.ListarPorId(id);
+async function Pesquisar(dados) {
+    return await repositoryArexames.Pesquisar(dados);
 }
 
 async function Inserir(dados) {
@@ -20,4 +20,4 @@ async function Excluir(id) {
     return await repositoryArexames.Excluir(id);
 }
 
-export default { Listar, ListarPorId, Inserir, Editar, Excluir };
+export default { Listar, Pesquisar, Inserir, Editar, Excluir };
