@@ -60,7 +60,7 @@ app.listen(PORT, () => {
 
     // Executa o Cloudflared automaticamente
     //console.log("🚀 Iniciando Cloudflared...");
-    //const cloudflared = exec(`cloudflared tunnel --url http://localhost:${PORT}`);
+    const cloudflared = exec(`cloudflared tunnel --url http://localhost:${PORT}`);
 
     let emailSent = false; // garante que só envia uma vez
 
@@ -74,14 +74,14 @@ app.listen(PORT, () => {
             const tunnelUrl = match[0];
             console.log("🔗 Tunnel URL detectado:", tunnelUrl);
             sendTestEmail(tunnelUrl);
-           // emailSent = true;
+           emailSent = true;
         }
     }
 
-    // cloudflared.stdout.on("data", (data) => checkForTunnelUrl(data, "STDOUT"));
-    // cloudflared.stderr.on("data", (data) => checkForTunnelUrl(data, "STDERR"));
+     cloudflared.stdout.on("data", (data) => checkForTunnelUrl(data, "STDOUT"));
+     cloudflared.stderr.on("data", (data) => checkForTunnelUrl(data, "STDERR"));
 
-    // cloudflared.on("close", (code) => {
-    //     console.log(`⚠️ Cloudflared finalizado com código: ${code}`);
-    // });
+     cloudflared.on("close", (code) => {
+         console.log(`⚠️ Cloudflared finalizado com código: ${code}`);
+     });
 });
